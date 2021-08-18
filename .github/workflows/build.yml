@@ -29,3 +29,25 @@ jobs:
         ./configure --prefix="$(pwd)/libsodium-win64"
         make
         make install
+        tar zcvf libsodium-win64.tar.gz libsodium-win64
+
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: v66f017f1
+        release_name: Release 66f017f1
+        draft: true
+        prerelease: false
+
+    - name: Upload Release Asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: libsodium/libsodium-win64.tar.gz
+        asset_name: libsodium-win64.tar.gz
+        asset_content_type: application/gzip
